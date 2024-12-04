@@ -1,0 +1,97 @@
+import { StyleSheet, Text, View } from 'react-native';
+import { scale, vScale } from '../../../Normalization';
+import { AntDesign } from '@expo/vector-icons';
+import { DARKGRAY, MEDIUMGRAY, WHITE } from '../../../color';
+import { Shadow } from 'react-native-shadow-2';
+
+const SearchDetailDropDown = () => {
+  return (
+    <View style={styles.dropDownCon}>
+      <View style={styles.dropDownItemBox}>
+        <Text style={styles.dropDownActiveText}>최신순</Text>
+        <AntDesign name="down" size={14} color={DARKGRAY} />
+      </View>
+      <View
+        style={{
+          position: 'absolute',
+          top: 50,
+          right: 0,
+          zIndex: 9999, // Ensure the dropdown menu is on top
+          overflow: 'visible',
+        }}
+      >
+        <Shadow distance={3} offset={[0, 1]}>
+          <View
+            style={{
+              backgroundColor: WHITE,
+              marginRight: 1,
+
+              borderRadius: 10,
+            }}
+          >
+            <View
+              style={{
+                width: 60,
+                height: 40,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={styles.dropDownSelectText}>최신순</Text>
+            </View>
+            <View
+              style={{
+                width: 60,
+                height: 40,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={styles.dropDownSelectText}>오래된순</Text>
+            </View>
+          </View>
+        </Shadow>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  dropDownCon: {
+    width: '100%',
+    height: 50,
+    alignItems: 'flex-end',
+    marginTop: vScale(15),
+    position: 'relative',
+    zIndex: 1,
+    overflow: 'visible',
+    backgroundColor: 'blue',
+  },
+  dropDownItemBox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    width: 60,
+  },
+  dropDownActiveText: {
+    color: DARKGRAY,
+    fontSize: scale(12),
+    marginRight: 10,
+  },
+  test: {
+    borderRadius: 10,
+  },
+  dropDownSelectText: {
+    color: DARKGRAY,
+    fontSize: scale(12),
+  },
+  dropDownMenuContainer: {
+    position: 'absolute',
+    top: 50,
+    right: 0,
+    zIndex: 9999, // Ensure the dropdown menu is on top
+    overflow: 'visible',
+  },
+});
+
+export default SearchDetailDropDown;

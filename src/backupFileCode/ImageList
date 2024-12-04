@@ -1,0 +1,172 @@
+import React, { useRef, useState, useEffect } from 'react';
+import {
+  ScrollView,
+  View,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+import { scale } from '../../../Normalization';
+
+const { width: screenWidth } = Dimensions.get('window');
+const imageBoxWidth = scale(screenWidth);
+const imageBoxHeight = scale(178); // Adjust this to your needs
+
+const ImageList = () => {
+  const initialImages = [
+    require('../../../../assets/home-clock.png'),
+    require('../../../../assets/home-map.png'),
+    require('../../../../assets/splash.png'),
+    require('../../../../assets/kakao_login.png'),
+  ];
+
+  const leftImages = [...initialImages];
+  const [images, setImages] = useState([
+    ...leftImages,
+    ...initialImages,
+    ...initialImages,
+  ]);
+  const [currentIndex, setCurrentIndex] = useState(0); // Current index
+  const [isLoading, setIsLoading] = useState(true);
+  const scrollViewRef = useRef(null);
+
+  // Initialize scroll position
+  useEffect(() => {
+    const initialIndex = leftImages.length;
+    scrollViewRef.current.scrollTo({
+      x: imageBoxWidth * initialIndex,
+      animated: false,
+    });
+
+    console.log(images.length);
+  }, [imageBoxWidth, leftImages.length, images]);
+
+  // Handle scroll event
+  const handleScroll = (event) => {
+    setIsLoading(false);
+    // setIsLoading(false);
+    // if (isLoading) {
+    //   const offsetX = event.nativeEvent.contentOffset.x;
+    //   const position = Math.round(offsetX / imageBoxWidth);
+    //   if (position >= images.length - 1) {
+    //     // Add initialImages if we're nearing the end
+    //     setImages((prevImages) => [...prevImages, ...initialImages]);
+    //   }
+    //   if (position <= 1) {
+    //     // Add leftImages if we're near the start
+    //     setImages((prevImages) => {
+    //       console.log('호출');
+    //       scrollViewRef.current.scrollTo({
+    //         x: imageBoxWidth * (position + leftImages.length),
+    //         animated: false,
+    //       });
+    //       return [...leftImages, ...prevImages];
+    //     });
+    //   }
+    //   // Calculate the current index based on the scroll position
+    //   const adjustedIndex =
+    //     (position - leftImages.length) % initialImages.length;
+    //   setCurrentIndex(
+    //     adjustedIndex < 0 ? initialImages.length - 1 : adjustedIndex
+    //   );
+    // }
+    // setTimeout(()=>{
+    //   setIsLoading(true);
+    // },5000)
+  };
+
+  // Handle scroll end event
+  const handleScrollEnd = (event) => {
+    //   const { contentOffset } = event.nativeEvent;
+    //   const position = Math.round(contentOffset.x / imageBoxWidth);
+    //   console.log(currentIndex);
+    //   scrollViewRef.current.scrollTo({
+    //     x: imageBoxWidth * (initialImages.length + currentIndex),
+    //     animated: false,
+    //   });
+    // };
+    // // Handle dot press
+    // const handleDotPress = (index) => {
+    //   scrollViewRef.current.scrollTo({
+    //     x: imageBoxWidth * (initialImages.length + index),
+    //     animated: true,
+    //   });
+  };
+
+  return (
+    <View
+      style={{
+        marginTop: 30,
+        height: imageBoxHeight + 30, // Added space for the dots
+      }}
+    >
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        onMomentumScrollEnd={handleScrollEnd}
+        scrollEventThrottle={16}
+        pagingEnabled
+        snapToInterval={imageBoxWidth}
+        decelerationRate="fast"
+        style={{ flex: 1 }}
+        scrollEnabled={isLoading}
+      >
+        {images.map((image, index) => (
+          <View
+            key={index}
+            style={{
+              width: imageBoxWidth,
+              height: imageBoxHeight,
+              paddingLeft: 0,
+            }}
+          >
+            <Image source={image} style={styles.headerImg} />
+          </View>
+        ))}
+      </ScrollView>
+
+      {/* Dot Indicator */}
+      <View style={styles.dotContainer}>
+        {initialImages.map((_, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.dot,
+              currentIndex === index ? styles.activeDot : null,
+            ]}
+            onPress={() => handleDotPress(index)}
+          />
+        ))}
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  headerImg: {
+    width: '100%',
+    height: '100%',
+  },
+  dotContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 10, // Space for the dots
+    width: '100%',
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#888',
+    margin: 5,
+  },
+  activeDot: {
+    backgroundColor: '#000',
+  },
+});
+
+export default ImageList;
